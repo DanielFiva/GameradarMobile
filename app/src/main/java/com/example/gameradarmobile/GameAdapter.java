@@ -1,44 +1,94 @@
 package com.example.gameradarmobile;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-// Simple empty adapter that shows a placeholder message when empty.
-// You will replace this with real data later.
+import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
 
-    // For now no data source. Add a List<Game> later.
+    private final ArrayList<JSONObject> games = new ArrayList<>();
+
+    public void addGames(JSONArray newGames) {
+        for (int i = 0; i < newGames.length(); i++) {
+
+            JSONArray arr = newGames.optJSONArray(i);
+            if (arr == null) {
+                Log.e("GameAdapter", "Element at index " + i + " is NOT an array");
+                continue;
+            }
+
+            // Convert array → object compatible with adapter
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("NAME", arr.optString(0, "Unknown"));
+                obj.put("DEV", arr.optString(1, "Unknown"));
+                obj.put("HEADER_IMAGE", arr.optString(2, ""));
+                obj.put("SCORE", arr.optInt(3, 0));
+
+                games.add(obj);  // now it's a real JSONObject
+
+            } catch (Exception e) {
+                Log.e("GameAdapter", "Error converting array to object", e);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_1, parent, false);
+                .inflate(R.layout.item_game, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // No data: show placeholder text if you want, but since getItemCount is 0 this won't be called.
-        holder.text.setText("Item " + position);
+        JSONObject game = games.get(position);
+
+        if (game == null) {
+            holder.txtName.setText("Unknown");
+            holder.img.setImageResource(R.drawable.placeholder); // use placeholder
+            return;
+        }
+
+        String name = game.optString("NAME", "Unknown");
+        String img = game.optString("HEADER_IMAGE", "");
+
+        holder.txtName.setText(name);
+
+        // Load image with Glide, use placeholder if URL is empty
+        Glide.with(holder.itemView.getContext())
+                .load(img.isEmpty() ? R.drawable.placeholder : img)
+                .placeholder(R.drawable.placeholder)  // while loading
+                .error(R.drawable.placeholder)        // if failed
+                .into(holder.img);
     }
 
     @Override
-    public int getItemCount() {
-        // Return 0 now (empty, infinite area placeholder).
-        // When you add data, return the list size here.
-        return 0;
-    }
+    public int getItemCount() { return games.size(); }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView text;
-        ViewHolder(@NonNull View itemView) {
+        ImageView img;
+        TextView txtName;
+        ViewHolder(View itemView) {
             super(itemView);
-            text = itemView.findViewById(android.R.id.text1);
+            img = itemView.findViewById(R.id.imgGame);
+            txtName = itemView.findViewById(R.id.txtGameName);
         }
     }
 }

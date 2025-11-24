@@ -22,7 +22,6 @@ public class SocketClient {
 
     private boolean connected = false;
 
-    // Listener
     public interface MessageListener {
         void onConnected();
         void onNewMessage(JSONObject msg);
@@ -42,40 +41,37 @@ public class SocketClient {
         new Thread(() -> {
             try {
                 socket = new Socket(host, port);
-
                 outputStream = socket.getOutputStream();
                 input = new BufferedReader(
                         new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)
                 );
-
                 connected = true;
                 Log.d("CLIENT", "Connected to server");
-
                 if (listener != null) listener.onConnected();
 
                 String line;
                 while ((line = input.readLine()) != null) {
+                    line = line.trim();
+                    if (line.isEmpty()) continue; // skip empty lines
                     try {
                         JSONObject obj = new JSONObject(line);
-
                         if (obj.has("type")) {
                             switch (obj.getString("type")) {
                                 case "NEW_MESSAGE":
-                                    listener.onNewMessage(obj);
+                                    if (listener != null) listener.onNewMessage(obj);
                                     break;
                                 case "MESSAGE_HISTORY":
-                                    listener.onMessageHistory(obj);
+                                    if (listener != null) listener.onMessageHistory(obj);
                                     break;
                                 default:
-                                    listener.onGenericResponse(obj);
+                                    if (listener != null) listener.onGenericResponse(obj);
                                     break;
                             }
                         } else {
-                            listener.onGenericResponse(obj);
+                            if (listener != null) listener.onGenericResponse(obj);
                         }
-
                     } catch (Exception e) {
-                        Log.e("CLIENT", "Invalid JSON: " + line);
+                        Log.e("CLIENT", "Invalid JSON received: " + line, e);
                     }
                 }
 
@@ -87,12 +83,8 @@ public class SocketClient {
     }
 
     public void disconnect() {
-        try {
-            connected = false;
-            if (socket != null) socket.close();
-        } catch (IOException e) {
-            Log.e("CLIENT", "Disconnect error: " + e.getMessage());
-        }
+        try { connected = false; if (socket != null) socket.close(); }
+        catch (IOException e) { Log.e("CLIENT", "Disconnect error: " + e.getMessage()); }
     }
 
     public void send(String message) {
@@ -100,57 +92,33 @@ public class SocketClient {
             try {
                 if (connected && outputStream != null) {
                     Log.d("CLIENT", "Sending: " + message);
-
                     outputStream.write((message + "\n").getBytes(StandardCharsets.UTF_8));
                     outputStream.flush();
-                } else {
-                    Log.e("CLIENT", "Send failed: not connected");
-                }
-            } catch (Exception e) {
-                Log.e("CLIENT", "Send error: " + e.getMessage());
-            }
+                } else { Log.e("CLIENT", "Send failed: not connected"); }
+            } catch (Exception e) { Log.e("CLIENT", "Send error: " + e.getMessage()); }
         }).start();
     }
 
-    // ------------------------------
-    // High-Level Commands
-    // ------------------------------
-
     public void login(String user, String pass) {
+        try { JSONObject obj = new JSONObject(); obj.put("username", user); obj.put("password", pass); send("LOGIN " + obj.toString()); }
+        catch (Exception ignored) {}
+    }
+
+    public void solicitarJuegos(String search, int page) {
         try {
             JSONObject obj = new JSONObject();
-            obj.put("username", user);
-            obj.put("password", pass);
-            send("LOGIN " + obj.toString());
+            obj.put("search", search);
+            obj.put("developer", "");
+            obj.put("genre", "");
+            obj.put("page", page);
+            obj.put("page_size", 20);
+            send("GET_GAMES " + obj.toString());
         } catch (Exception ignored) {}
     }
 
-    public void solicitarReviews(int gameId) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("game_id", gameId);
-            send("GET_REVIEWS " + obj.toString());
-        } catch (Exception ignored) {}
-    }
-
-    public void enviarReview(JSONObject review) {
-        send("ADD_REVIEW " + review.toString());
-    }
-
-    public void crearUsuario(JSONObject userData) {
-        send("CREATE_USER " + userData.toString());
-    }
-
-    public void enviarMensajeChat(String username, String content) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("username", username);
-            obj.put("content", content);
-            send("SEND_MESSAGE " + obj.toString());
-        } catch (Exception ignored) {}
-    }
-
-    public void solicitarMensajesChat() {
-        send("GET_MESSAGES");
-    }
+    public void solicitarReviews(int gameId) { try { JSONObject obj = new JSONObject(); obj.put("game_id", gameId); send("GET_REVIEWS " + obj.toString()); } catch (Exception ignored) {} }
+    public void enviarReview(JSONObject review) { send("ADD_REVIEW " + review.toString()); }
+    public void crearUsuario(JSONObject userData) { send("CREATE_USER " + userData.toString()); }
+    public void enviarMensajeChat(String username, String content) { try { JSONObject obj = new JSONObject(); obj.put("username", username); obj.put("content", content); send("SEND_MESSAGE " + obj.toString()); } catch (Exception ignored) {} }
+    public void solicitarMensajesChat() { send("GET_MESSAGES"); }
 }

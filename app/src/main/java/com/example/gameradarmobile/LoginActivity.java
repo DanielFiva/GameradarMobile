@@ -28,10 +28,8 @@ public class LoginActivity extends AppCompatActivity {
         btnExit = findViewById(R.id.btnExit);
         btnCreateUser = findViewById(R.id.btnCreateUser);
 
-        // Disable login until connected
         btnLogin.setEnabled(false);
 
-        // --- Connect to server ---
         client = new SocketClient("4.tcp.ngrok.io", 12761, new SocketClient.MessageListener() {
 
             @Override
@@ -42,12 +40,8 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
 
-            @Override
-            public void onNewMessage(JSONObject msg) {}
-
-            @Override
-            public void onMessageHistory(JSONObject history) {}
-
+            @Override public void onNewMessage(JSONObject msg) {}
+            @Override public void onMessageHistory(JSONObject history) {}
             @Override
             public void onGenericResponse(JSONObject resp) {
                 runOnUiThread(() -> handleResponse(resp));
@@ -56,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
 
         client.connect();
 
-        // --- Login button ---
         btnLogin.setOnClickListener(v -> {
             String user = usernameInput.getText().toString();
             String pass = passwordInput.getText().toString();
@@ -69,16 +62,11 @@ public class LoginActivity extends AppCompatActivity {
             client.login(user, pass);
         });
 
-        // --- Exit button ---
         btnExit.setOnClickListener(v -> finishAffinity());
-
-        // --- Create user button ---
         btnCreateUser.setOnClickListener(v -> {
-            // Intent intent = new Intent(this, CreateUserActivity.class);
-            // startActivity(intent);
+            // TODO: open CreateUserActivity
         });
     }
-
 
     private void handleResponse(JSONObject resp) {
         try {
@@ -87,13 +75,10 @@ public class LoginActivity extends AppCompatActivity {
                 JSONArray userArray = resp.getJSONArray("user_data");
                 JSONArray userData = userArray.getJSONArray(0);
 
-                // Start CatalogActivity and pass the user data as a string
                 Intent intent = new Intent(this, CatalogActivity.class);
                 intent.putExtra("user_data", userData.toString());
                 startActivity(intent);
 
-                // Optionally finish the login so user can't go back to it
-                finish();
 
             } else {
                 Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();

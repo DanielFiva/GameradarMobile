@@ -1,18 +1,19 @@
 package com.example.gameradarmobile;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
 import android.content.Intent;
-import android.view.View;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class CatalogActivity extends AppCompatActivity {
 
@@ -22,17 +23,18 @@ public class CatalogActivity extends AppCompatActivity {
     GameAdapter adapter;
     JSONArray userData = null;
 
+    SocketClient client;
+    int currentPage = 0;
+    boolean loading = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
 
-        // Toolbar (if present in layout)
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Catálogo");
-        }
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle("Catálogo");
 
         searchInput = findViewById(R.id.searchInput);
         recyclerGames = findViewById(R.id.recyclerGames);
@@ -40,38 +42,58 @@ public class CatalogActivity extends AppCompatActivity {
         btnBottomAction = findViewById(R.id.btnBottomAction);
         btnBack = findViewById(R.id.btnBack);
 
-        // Get incoming user data
         Intent intent = getIntent();
         String userDataString = intent.getStringExtra("user_data");
         if (userDataString != null) {
             try {
-                // store it for later use
                 userData = new JSONArray(userDataString);
             } catch (Exception e) {
                 Toast.makeText(this, "Error parseando user_data", Toast.LENGTH_SHORT).show();
             }
         }
 
-        // Setup RecyclerView with an empty adapter for now
-        adapter = new GameAdapter(); // initially empty
+        adapter = new GameAdapter();
         recyclerGames.setLayoutManager(new LinearLayoutManager(this));
         recyclerGames.setAdapter(adapter);
 
-        // Back button - finish activity
         btnBack.setOnClickListener(v -> finish());
+        btnVerUsuarios.setOnClickListener(v -> Toast.makeText(this, "Ver usuarios (pendiente)", Toast.LENGTH_SHORT).show());
+        btnBottomAction.setOnClickListener(v -> Toast.makeText(this, "Acción inferior (pendiente)", Toast.LENGTH_SHORT).show());
 
-        // "Ver usuarios" button - currently does nothing (placeholder)
-        btnVerUsuarios.setOnClickListener(v -> {
-            Toast.makeText(this, "Ver usuarios (pendiente)", Toast.LENGTH_SHORT).show();
-            // TODO: Open users list or do something with userData
+        recyclerGames.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    if (!loading && lm != null && lm.findLastVisibleItemPosition() >= adapter.getItemCount() - 5) {
+                        loading = true;
+                        currentPage++;
+                        client.solicitarJuegos(searchInput.getText().toString(), currentPage);
+                    }
+                }
+            }
         });
 
-        // Bottom action button - placeholder
-        btnBottomAction.setOnClickListener(v -> {
-            Toast.makeText(this, "Acción inferior (pendiente)", Toast.LENGTH_SHORT).show();
+        client = new SocketClient("4.tcp.ngrok.io", 12761, new SocketClient.MessageListener() {
+            @Override public void onConnected() { client.solicitarJuegos("", 0); }
+            @Override public void onNewMessage(JSONObject msg) {}
+            @Override public void onMessageHistory(JSONObject history) {}
+            @Override public void onGenericResponse(JSONObject resp) { runOnUiThread(() -> handleServerResponse(resp)); }
         });
+        client.connect();
+    }
 
-        // TODO: add search filtering logic for adapter when you populate the adapter data
-        // Example: add a TextWatcher on searchInput and filter adapter items.
+    private void handleServerResponse(JSONObject resp) {
+        try {
+            if (resp.has("type") && resp.getString("type").equals("GAMES")) {
+                if (resp.getString("status").equals("OK")) {
+                    JSONArray games = resp.getJSONArray("games");
+                    adapter.addGames(games);
+                    loading = false;
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Error procesando juegos", Toast.LENGTH_SHORT).show();
+        }
     }
 }
