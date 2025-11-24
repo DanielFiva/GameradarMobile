@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Crear usuario"
+            android:textSize="24sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="16dp"
+            android:background="#7F43FF"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Username -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Usuario"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:paddingBottom="4dp"/>
+        <EditText
+            android:id="@+id/UsernameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edittext_bg"
+            android:paddingLeft="10dp"
+            android:hint="Nombre de usuario"
+            android:textColor="#000000"
+            android:textSize="14sp"/>
+
+        <!-- Password -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contraseña"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"/>
+        <EditText
+            android:id="@+id/PasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edittext_bg"
+            android:paddingLeft="10dp"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:textSize="14sp"/>
+
+        <!-- Age -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edad"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"/>
+        <EditText
+            android:id="@+id/AgeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edittext_bg"
+            android:paddingLeft="10dp"
+            android:hint="Edad"
+            android:inputType="number"
+            android:textColor="#000000"
+            android:textSize="14sp"/>
+
+        <!-- Phone -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Teléfono"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"/>
+        <EditText
+            android:id="@+id/PhoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edittext_bg"
+            android:paddingLeft="10dp"
+            android:hint="Teléfono"
+            android:inputType="phone"
+            android:textColor="#000000"
+            android:textSize="14sp"/>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btnAccept"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Aceptar"
+                android:background="@drawable/button_accept"
+                android:textColor="#000000"
+                android:textSize="16sp"/>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Volver"
+                android:background="@drawable/button_back"
+                android:textColor="#000000"
+                android:textSize="16sp"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

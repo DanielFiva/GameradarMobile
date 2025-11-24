@@ -64,7 +64,8 @@ public class LoginActivity extends AppCompatActivity {
 
         btnExit.setOnClickListener(v -> finishAffinity());
         btnCreateUser.setOnClickListener(v -> {
-            // TODO: open CreateUserActivity
+            Intent intent = new Intent(LoginActivity.this, CreateUserActivity.class);
+            startActivity(intent);
         });
     }
 
