@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <!-- Login Card -->
+        <LinearLayout
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@drawable/bg_login_card"
+            android:elevation="6dp"
+            android:layout_marginTop="40dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GameRadar"
+                android:textSize="34sp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:background="@drawable/bg_title" />
+
+            <!-- Username Label -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre de usuario"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="4dp"/>
+
+            <!-- Username Input -->
+            <EditText
+                android:id="@+id/inputUsername"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:background="@drawable/bg_input"
+                android:textSize="16sp"/>
+
+            <!-- Password Label -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contraseña"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:paddingTop="14dp"
+                android:paddingBottom="4dp"/>
+
+            <!-- Password Input -->
+            <EditText
+                android:id="@+id/inputPassword"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:inputType="textPassword"
+                android:background="@drawable/bg_input"
+                android:textSize="16sp"/>
+
+            <!-- Create User Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¿No tienes cuenta?"
+                    android:textStyle="bold"/>
+
+                <Button
+                    android:id="@+id/btnCreateUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Crea una"
+                    android:textStyle="bold"
+                    android:background="@android:color/transparent"
+                    android:textColor="#0000FF"/>
+            </LinearLayout>
+
+            <!-- Login Button -->
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Iniciar Sesión"
+                android:textSize="18sp"
+                android:fontFamily="serif"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_button_green"/>
+
+            <!-- Exit Button -->
+            <Button
+                android:id="@+id/btnExit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Salir"
+                android:textSize="18sp"
+                android:fontFamily="serif"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_button_red"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
