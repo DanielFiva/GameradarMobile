@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
+import android.content.Intent;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -78,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
     private void handleResponse(JSONObject resp) {
         try {
             if (resp.has("status") && resp.getString("status").equals("OK")) {
@@ -85,10 +87,12 @@ public class LoginActivity extends AppCompatActivity {
                 JSONArray userArray = resp.getJSONArray("user_data");
                 JSONArray userData = userArray.getJSONArray(0);
 
-                // Intent intent = new Intent(this, CatalogActivity.class);
-                // intent.putExtra("user_data", userData.toString());
-                // startActivity(intent);
+                // Start CatalogActivity and pass the user data as a string
+                Intent intent = new Intent(this, CatalogActivity.class);
+                intent.putExtra("user_data", userData.toString());
+                startActivity(intent);
 
+                // Optionally finish the login so user can't go back to it
                 finish();
 
             } else {
