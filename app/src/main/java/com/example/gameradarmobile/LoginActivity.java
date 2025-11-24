@@ -6,6 +6,7 @@ import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
@@ -81,7 +82,8 @@ public class LoginActivity extends AppCompatActivity {
         try {
             if (resp.has("status") && resp.getString("status").equals("OK")) {
 
-                JSONObject userData = resp.getJSONObject("user_data");
+                JSONArray userArray = resp.getJSONArray("user_data");
+                JSONArray userData = userArray.getJSONArray(0);
 
                 // Intent intent = new Intent(this, CatalogActivity.class);
                 // intent.putExtra("user_data", userData.toString());

@@ -39,7 +39,7 @@ captures/
 *.aab
 
 # Gradle cache
-.gradle/
+
 **/build/
 
 # NDK
