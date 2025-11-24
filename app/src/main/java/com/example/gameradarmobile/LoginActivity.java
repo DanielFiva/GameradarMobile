@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.Intent;
 
 import org.json.JSONObject;
 
@@ -27,8 +26,19 @@ public class LoginActivity extends AppCompatActivity {
         btnExit = findViewById(R.id.btnExit);
         btnCreateUser = findViewById(R.id.btnCreateUser);
 
+        // Disable login until connected
+        btnLogin.setEnabled(false);
+
         // --- Connect to server ---
-        client = new SocketClient("8.tcp.ngrok.io", 12018, new SocketClient.MessageListener() {
+        client = new SocketClient("4.tcp.ngrok.io", 12761, new SocketClient.MessageListener() {
+
+            @Override
+            public void onConnected() {
+                runOnUiThread(() -> {
+                    btnLogin.setEnabled(true);
+                    Toast.makeText(LoginActivity.this, "Conectado al servidor", Toast.LENGTH_SHORT).show();
+                });
+            }
 
             @Override
             public void onNewMessage(JSONObject msg) {}
@@ -62,8 +72,8 @@ public class LoginActivity extends AppCompatActivity {
 
         // --- Create user button ---
         btnCreateUser.setOnClickListener(v -> {
-            //Intent intent = new Intent(this, CreateUserActivity.class);
-           // startActivity(intent);
+            // Intent intent = new Intent(this, CreateUserActivity.class);
+            // startActivity(intent);
         });
     }
 
@@ -73,9 +83,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 JSONObject userData = resp.getJSONObject("user_data");
 
-                //Intent i = new Intent(this, CatalogActivity.class);
-                //i.putExtra("user_data", userData.toString());
-                //startActivity(i);
+                // Intent intent = new Intent(this, CatalogActivity.class);
+                // intent.putExtra("user_data", userData.toString());
+                // startActivity(intent);
 
                 finish();
 

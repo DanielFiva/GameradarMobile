@@ -1,25 +1,30 @@
 package com.example.gameradarmobile;
 
-
 import android.util.Log;
+
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class SocketClient {
 
     private String host;
     private int port;
+
     private Socket socket;
-    private PrintWriter output;
+    private OutputStream outputStream;
     private BufferedReader input;
+
     private boolean connected = false;
 
-    // Listener callbacks
+    // Listener
     public interface MessageListener {
+        void onConnected();
         void onNewMessage(JSONObject msg);
         void onMessageHistory(JSONObject history);
         void onGenericResponse(JSONObject resp);
@@ -37,13 +42,17 @@ public class SocketClient {
         new Thread(() -> {
             try {
                 socket = new Socket(host, port);
-                output = new PrintWriter(socket.getOutputStream(), true);
-                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                connected = true;
 
+                outputStream = socket.getOutputStream();
+                input = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)
+                );
+
+                connected = true;
                 Log.d("CLIENT", "Connected to server");
 
-                // Listening loop
+                if (listener != null) listener.onConnected();
+
                 String line;
                 while ((line = input.readLine()) != null) {
                     try {
@@ -54,13 +63,12 @@ public class SocketClient {
                                 case "NEW_MESSAGE":
                                     listener.onNewMessage(obj);
                                     break;
-
                                 case "MESSAGE_HISTORY":
                                     listener.onMessageHistory(obj);
                                     break;
-
                                 default:
                                     listener.onGenericResponse(obj);
+                                    break;
                             }
                         } else {
                             listener.onGenericResponse(obj);
@@ -72,7 +80,7 @@ public class SocketClient {
                 }
 
             } catch (Exception e) {
-                Log.e("CLIENT", "Connection failed: " + e);
+                Log.e("CLIENT", "Connection failed: " + e.getMessage());
                 connected = false;
             }
         }).start();
@@ -83,18 +91,31 @@ public class SocketClient {
             connected = false;
             if (socket != null) socket.close();
         } catch (IOException e) {
-            Log.e("CLIENT", "Disconnect error: " + e);
+            Log.e("CLIENT", "Disconnect error: " + e.getMessage());
         }
     }
 
     public void send(String message) {
-        if (connected && output != null) {
-            output.println(message);
-            output.flush();
-        }
+        new Thread(() -> {
+            try {
+                if (connected && outputStream != null) {
+                    Log.d("CLIENT", "Sending: " + message);
+
+                    outputStream.write((message + "\n").getBytes(StandardCharsets.UTF_8));
+                    outputStream.flush();
+                } else {
+                    Log.e("CLIENT", "Send failed: not connected");
+                }
+            } catch (Exception e) {
+                Log.e("CLIENT", "Send error: " + e.getMessage());
+            }
+        }).start();
     }
 
-    // High-level API (like your Python client)
+    // ------------------------------
+    // High-Level Commands
+    // ------------------------------
+
     public void login(String user, String pass) {
         try {
             JSONObject obj = new JSONObject();
