@@ -1,1 +1,72 @@
-/build
+# Gradle files
+.gradle/
+build/
+*/build/
+
+# Local configuration file (sdk path, keystore paths, etc)
+local.properties
+
+# Log/OS files
+*.log
+
+# Android Studio specific
+/.idea
+*.iml
+.DS_Store
+
+# Auto-generated files
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Signing files (keystore)
+*.jks
+*.keystore
+
+# If you’re using Flutter module inside Android
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Kotlin
+*.kotlin_module
+
+# Java
+*.class
+
+# APK / AAB / bundle outputs
+*.apk
+*.ap_
+*.aab
+
+# Gradle cache
+.gradle/
+**/build/
+
+# NDK
+obj/
+
+# Firebase / Google
+google-services.json
+app/google-services.json
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+
+# Misc
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# Intellij
+out/
+
+# Windows
+Thumbs.db
+
+# Mac
+.DS_Store
