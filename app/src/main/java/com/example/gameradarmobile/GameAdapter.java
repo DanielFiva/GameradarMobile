@@ -1,5 +1,6 @@
 package com.example.gameradarmobile;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,21 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
                 .placeholder(R.drawable.placeholder)  // while loading
                 .error(R.drawable.placeholder)        // if failed
                 .into(holder.img);
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), GameDetailsActivity.class);
+
+            intent.putExtra("title", game.optString("NAME"));
+            intent.putExtra("developer", game.optString("DEV"));
+            intent.putExtra("imageUrl", game.optString("HEADER_IMAGE"));
+            intent.putExtra("rating", game.optInt("SCORE"));
+
+            // If later you add these fields, they won't crash:
+            intent.putExtra("summary", game.optString("SUMMARY", "Sin descripción"));
+            intent.putExtra("publisher", game.optString("PUBLISHER", "Desconocido"));
+            intent.putExtra("releaseDate", game.optString("RELEASE_DATE", "Desconocida"));
+
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override

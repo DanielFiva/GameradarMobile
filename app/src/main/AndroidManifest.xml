@@ -23,6 +23,8 @@
         <activity android:name=".CatalogActivity"
             android:label="Catálogo" />
         <activity android:name=".CreateUserActivity" />
+        <activity android:name=".GameDetailsActivity"
+            android:label="Detalles Juego" />
     </application>
 
 </manifest>
