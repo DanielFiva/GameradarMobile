@@ -60,7 +60,10 @@ public class CatalogActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
         btnVerUsuarios.setOnClickListener(v -> Toast.makeText(this, "Ver usuarios (pendiente)", Toast.LENGTH_SHORT).show());
-        btnBottomAction.setOnClickListener(v -> Toast.makeText(this, "Acción inferior (pendiente)", Toast.LENGTH_SHORT).show());
+        btnBottomAction.setOnClickListener(v -> {
+            Intent chatIntent = new Intent(CatalogActivity.this, ChatActivity.class);
+            startActivity(chatIntent);
+        });
 
         recyclerGames.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

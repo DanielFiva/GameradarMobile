@@ -25,6 +25,8 @@
         <activity android:name=".CreateUserActivity" />
         <activity android:name=".GameDetailsActivity"
             android:label="Detalles Juego" />
+        <activity android:name=".ChatActivity"
+            android:label="Chat" />
     </application>
 
 </manifest>
