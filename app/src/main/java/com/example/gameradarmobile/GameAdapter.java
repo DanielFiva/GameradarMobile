@@ -1,6 +1,6 @@
 package com.example.gameradarmobile;
 
-import android.content.Intent;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,31 +21,31 @@ import java.util.ArrayList;
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
 
     private final ArrayList<JSONObject> games = new ArrayList<>();
+    private final SocketClient client;
+
+    public GameAdapter(SocketClient client) {
+        this.client = client;
+    }
 
     public void addGames(JSONArray newGames) {
         for (int i = 0; i < newGames.length(); i++) {
-
             JSONArray arr = newGames.optJSONArray(i);
             if (arr == null) {
                 Log.e("GameAdapter", "Element at index " + i + " is NOT an array");
                 continue;
             }
-
-            // Convert array → object compatible with adapter
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("NAME", arr.optString(0, "Unknown"));
-                obj.put("DEV", arr.optString(1, "Unknown"));
+                obj.put("DEVELOPER", arr.optString(1, "Unknown"));
                 obj.put("HEADER_IMAGE", arr.optString(2, ""));
                 obj.put("SCORE", arr.optInt(3, 0));
 
-                games.add(obj);  // now it's a real JSONObject
-
+                games.add(obj);
             } catch (Exception e) {
                 Log.e("GameAdapter", "Error converting array to object", e);
             }
         }
-
         notifyDataSetChanged();
     }
 
@@ -63,7 +63,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
 
         if (game == null) {
             holder.txtName.setText("Unknown");
-            holder.img.setImageResource(R.drawable.placeholder); // use placeholder
+            holder.img.setImageResource(R.drawable.placeholder);
             return;
         }
 
@@ -72,35 +72,35 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
 
         holder.txtName.setText(name);
 
-        // Load image with Glide, use placeholder if URL is empty
         Glide.with(holder.itemView.getContext())
                 .load(img.isEmpty() ? R.drawable.placeholder : img)
-                .placeholder(R.drawable.placeholder)  // while loading
-                .error(R.drawable.placeholder)        // if failed
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
                 .into(holder.img);
+
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), GameDetailsActivity.class);
-
-            intent.putExtra("title", game.optString("NAME"));
-            intent.putExtra("developer", game.optString("DEV"));
-            intent.putExtra("imageUrl", game.optString("HEADER_IMAGE"));
-            intent.putExtra("rating", game.optInt("SCORE"));
-
-            // If later you add these fields, they won't crash:
-            intent.putExtra("summary", game.optString("SUMMARY", "Sin descripción"));
-            intent.putExtra("publisher", game.optString("PUBLISHER", "Desconocido"));
-            intent.putExtra("releaseDate", game.optString("RELEASE_DATE", "Desconocida"));
-
-            v.getContext().startActivity(intent);
+            // Send GET_GAME request to server
+            if (client != null) {
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("game_name", name);
+                    client.send("GET_GAME " + obj.toString());
+                } catch (Exception e) {
+                    Log.e("GameAdapter", "Error sending GET_GAME", e);
+                }
+            }
         });
     }
 
     @Override
-    public int getItemCount() { return games.size(); }
+    public int getItemCount() {
+        return games.size();
+    }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
         TextView txtName;
+
         ViewHolder(View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.imgGame);

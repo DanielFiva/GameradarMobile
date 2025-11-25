@@ -44,8 +44,7 @@ public class CatalogActivity extends AppCompatActivity {
         btnBottomAction = findViewById(R.id.btnBottomAction);
         btnBack = findViewById(R.id.btnBack);
 
-        Intent intent = getIntent();
-        String userDataString = intent.getStringExtra("user_data");
+        String userDataString = getIntent().getStringExtra("user_data");
         if (userDataString != null) {
             try {
                 userData = new JSONArray(userDataString);
@@ -54,7 +53,19 @@ public class CatalogActivity extends AppCompatActivity {
             }
         }
 
-        adapter = new GameAdapter();
+        client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
+            @Override
+            public void onConnected() { client.solicitarJuegos("", 0); }
+
+            @Override public void onNewMessage(JSONObject msg) {}
+            @Override public void onMessageHistory(JSONObject history) {}
+            @Override public void onGenericResponse(JSONObject resp) {
+                runOnUiThread(() -> handleServerResponse(resp));
+            }
+        });
+        client.connect();
+
+        adapter = new GameAdapter(client); // pass client to adapter
         recyclerGames.setLayoutManager(new LinearLayoutManager(this));
         recyclerGames.setAdapter(adapter);
 
@@ -79,27 +90,52 @@ public class CatalogActivity extends AppCompatActivity {
                 }
             }
         });
-
-        client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
-            @Override public void onConnected() { client.solicitarJuegos("", 0); }
-            @Override public void onNewMessage(JSONObject msg) {}
-            @Override public void onMessageHistory(JSONObject history) {}
-            @Override public void onGenericResponse(JSONObject resp) { runOnUiThread(() -> handleServerResponse(resp)); }
-        });
-        client.connect();
     }
 
     private void handleServerResponse(JSONObject resp) {
         try {
-            if (resp.has("type") && resp.getString("type").equals("GAMES")) {
-                if (resp.getString("status").equals("OK")) {
-                    JSONArray games = resp.getJSONArray("games");
-                    adapter.addGames(games);
-                    loading = false;
+            if (resp.has("type")) {
+                switch (resp.getString("type")) {
+                    case "GAMES":
+                        if (resp.getString("status").equals("OK")) {
+                            JSONArray games = resp.getJSONArray("games");
+                            adapter.addGames(games);
+                            loading = false;
+                        }
+                        break;
+                    case "GAME_DATA":
+                        if (resp.getString("status").equals("OK")) {
+                            JSONArray gameArray = resp.getJSONArray("game_data");
+
+                            // Make sure the array has enough elements
+                            if (gameArray.length() >= 8) {
+                                int gameId = gameArray.optInt(0);
+                                String name = gameArray.optString(1);
+                                String description = gameArray.optString(2);
+                                String imageUrl = gameArray.optString(3);
+                                int metacriticScore = gameArray.optInt(4);
+                                String releaseDate = gameArray.optString(5);
+                                String developer = gameArray.optString(6);
+                                String publisher = gameArray.optString(7);
+
+                                // Launch details activity
+                                Intent intent = new Intent(CatalogActivity.this, GameDetailsActivity.class);
+                                intent.putExtra("id", gameId);
+                                intent.putExtra("title", name);
+                                intent.putExtra("SHORT_DESC", description);
+                                intent.putExtra("imageUrl", imageUrl);
+                                intent.putExtra("rating", metacriticScore);
+                                intent.putExtra("releaseDate", releaseDate);
+                                intent.putExtra("developer", developer);
+                                intent.putExtra("publisher", publisher);
+                                startActivity(intent);
+                            }
+                        }
+                        break;
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Error procesando juegos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error procesando respuesta del servidor", Toast.LENGTH_SHORT).show();
         }
     }
 }

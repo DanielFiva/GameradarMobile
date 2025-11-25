@@ -86,6 +86,13 @@ public class SocketClient {
         try { connected = false; if (socket != null) socket.close(); }
         catch (IOException e) { Log.e("CLIENT", "Disconnect error: " + e.getMessage()); }
     }
+    public void solicitarJuego(String gameName) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("game_name", gameName);
+            send("GET_GAME " + obj.toString());
+        } catch (Exception ignored) {}
+    }
 
     public void send(String message) {
         new Thread(() -> {
