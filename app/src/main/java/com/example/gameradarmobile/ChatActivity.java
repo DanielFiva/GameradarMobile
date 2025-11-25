@@ -1,63 +1,107 @@
 package com.example.gameradarmobile;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
 
-    LinearLayout messageContainer;
-    EditText messageInput;
-    Button sendButton, backButton;
+    RecyclerView recyclerChat;
+    EditText inputChat;
+    Button btnSend, btnBack;
+
+    ArrayList<ChatMessage> messages = new ArrayList<>();
+    ChatAdapter adapter;
+
+    SocketClient client;
+    String username = "User"; // Optional: pass real username via Intent
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        messageContainer = findViewById(R.id.messageContainer);
-        messageInput = findViewById(R.id.messageInput);
-        sendButton = findViewById(R.id.sendButton);
-        backButton = findViewById(R.id.backButton);
+        recyclerChat = findViewById(R.id.recyclerChat);
+        inputChat = findViewById(R.id.inputChat);
+        btnSend = findViewById(R.id.btnSend);
+        btnBack = findViewById(R.id.btnBack);
 
-        backButton.setOnClickListener(v -> finish());
+        recyclerChat.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ChatAdapter(messages);
+        recyclerChat.setAdapter(adapter);
 
-        sendButton.setOnClickListener(v -> {
-            String msg = messageInput.getText().toString().trim();
-            if(!msg.isEmpty()) {
-                addMessage(msg, true); // true = user message
-                messageInput.setText("");
+        if (getIntent().hasExtra("username"))
+            username = getIntent().getStringExtra("username");
 
-                // TODO: Send to server or simulate reply
-                // Example: addMessage("Bot reply to: " + msg, false);
+        client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
+            @Override public void onConnected() {
+                client.solicitarMensajesChat();
             }
+
+            @Override public void onNewMessage(JSONObject msg) {
+                runOnUiThread(() -> addNewMessage(msg));
+            }
+
+            @Override public void onMessageHistory(JSONObject history) {
+                runOnUiThread(() -> loadHistory(history));
+            }
+
+            @Override public void onGenericResponse(JSONObject resp) {}
         });
+
+        client.connect();
+
+        btnSend.setOnClickListener(v -> {
+            String text = inputChat.getText().toString().trim();
+            if (text.isEmpty()) return;
+
+            client.enviarMensajeChat(username, text);
+            inputChat.setText("");
+        });
+
+        btnBack.setOnClickListener(v -> finish());
     }
 
-    private void addMessage(String message, boolean isUser) {
-        TextView tv = new TextView(this);
-        tv.setText(message);
-        tv.setTextColor(isUser ? 0xFFdcddde : 0xFFaaaaaa);
-        tv.setBackgroundColor(isUser ? 0xFF5C7E10 : 0xFF40444b);
-        tv.setPadding(16, 8, 16, 8);
+    private void loadHistory(JSONObject history) {
+        try {
+            JSONArray arr = history.getJSONArray("messages");
+            messages.clear();
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(8, 8, 8, 8);
-        params.gravity = isUser ? android.view.Gravity.END : android.view.Gravity.START;
-        tv.setLayoutParams(params);
+            for (int i = 0; i < arr.length(); i++) {
+                JSONArray row = arr.getJSONArray(i);
+                messages.add(new ChatMessage(row.getString(0), row.getString(1)));
+            }
 
-        messageContainer.addView(tv);
+            adapter.notifyDataSetChanged();
+            recyclerChat.scrollToPosition(messages.size() - 1);
 
-        // Scroll to bottom
-        messageContainer.post(() -> ((ScrollView) messageContainer.getParent()).fullScroll(View.FOCUS_DOWN));
+        } catch (Exception ignored) {}
+    }
+
+    private void addNewMessage(JSONObject msg) {
+        try {
+            String sender = msg.getString("sender");
+            String message = msg.getString("message");
+
+            messages.add(new ChatMessage(sender, message));
+            adapter.notifyItemInserted(messages.size() - 1);
+            recyclerChat.scrollToPosition(messages.size() - 1);
+
+        } catch (Exception ignored) {}
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        client.disconnect();
     }
 }

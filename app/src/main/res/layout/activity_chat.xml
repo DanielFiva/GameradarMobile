@@ -1,76 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="#2f3136"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="8dp">
+    android:layout_height="match_parent">
 
-    <!-- Top bar -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back" />
 
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:text="←"
-            android:textColor="#dcddde"
-            android:background="#2A475E"
-            android:layout_gravity="center_vertical"
-            android:padding="0dp" />
-
-    </LinearLayout>
-
-    <!-- Message display -->
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerChat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#2f3136"
-        android:padding="8dp">
+        android:layout_weight="1"/>
 
-        <LinearLayout
-            android:id="@+id/messageContainer"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <!-- Messages will be added here dynamically -->
-        </LinearLayout>
-
-    </ScrollView>
-
-    <!-- Input field + send button -->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp">
+        android:padding="8dp">
 
         <EditText
-            android:id="@+id/messageInput"
+            android:id="@+id/inputChat"
+            android:hint="Write a message..."
             android:layout_width="0dp"
-            android:layout_height="40dp"
             android:layout_weight="1"
-            android:background="#40444b"
-            android:textColor="#dcddde"
-            android:hint="Escribe un mensaje..."
-            android:padding="8dp"
-            android:layout_marginEnd="8dp"
-            android:imeOptions="actionSend"
-            android:singleLine="true" />
+            android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/sendButton"
+            android:id="@+id/btnSend"
+            android:text="Send"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="Enviar"
-            android:background="#5C7E10"
-            android:textColor="#ffffff"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp" />
-    </LinearLayout>
+            android:layout_height="wrap_content" />
 
+    </LinearLayout>
 </LinearLayout>
