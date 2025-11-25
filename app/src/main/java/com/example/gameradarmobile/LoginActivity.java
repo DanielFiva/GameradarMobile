@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setEnabled(false);
 
-        client = new SocketClient("4.tcp.ngrok.io", 12761, new SocketClient.MessageListener() {
+        client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
 
             @Override
             public void onConnected() {

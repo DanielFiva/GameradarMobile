@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class CatalogActivity extends AppCompatActivity {
         searchInput = findViewById(R.id.searchInput);
         recyclerGames = findViewById(R.id.recyclerGames);
         btnVerUsuarios = findViewById(R.id.btnVerUsuarios);
+        btnVerUsuarios.setVisibility(View.GONE);
         btnBottomAction = findViewById(R.id.btnBottomAction);
         btnBack = findViewById(R.id.btnBack);
 
@@ -74,7 +76,7 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
-        client = new SocketClient("4.tcp.ngrok.io", 12761, new SocketClient.MessageListener() {
+        client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
             @Override public void onConnected() { client.solicitarJuegos("", 0); }
             @Override public void onNewMessage(JSONObject msg) {}
             @Override public void onMessageHistory(JSONObject history) {}

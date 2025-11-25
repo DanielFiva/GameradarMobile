@@ -29,7 +29,7 @@ public class CreateUserActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
         // Get the existing SocketClient from LoginActivity or create new
-        client = new SocketClient("4.tcp.ngrok.io", 12761, new SocketClient.MessageListener() {
+        client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
             @Override
             public void onConnected() {}
             @Override
