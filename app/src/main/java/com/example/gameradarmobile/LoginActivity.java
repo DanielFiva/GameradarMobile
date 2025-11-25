@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 JSONArray userArray = resp.getJSONArray("user_data");
                 JSONArray userData = userArray.getJSONArray(0);
-
+                String loggedUsername = userData.getString(1);
                 Intent intent = new Intent(this, CatalogActivity.class);
                 intent.putExtra("user_data", userData.toString());
                 startActivity(intent);

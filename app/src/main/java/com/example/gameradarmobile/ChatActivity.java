@@ -23,7 +23,9 @@ public class ChatActivity extends AppCompatActivity {
     ChatAdapter adapter;
 
     SocketClient client;
-    String username = "User"; // Optional: pass real username via Intent
+
+    // ⬅️ Username is stored here (class field so lambdas can use it)
+    String loggedUsername = "User";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +41,26 @@ public class ChatActivity extends AppCompatActivity {
         adapter = new ChatAdapter(messages);
         recyclerChat.setAdapter(adapter);
 
-        if (getIntent().hasExtra("username"))
-            username = getIntent().getStringExtra("username");
+        // --- RECEIVE USER DATA ---
+        try {
+            String userDataString = getIntent().getStringExtra("user_data");
 
+            if (userDataString != null) {
+                JSONArray userData = new JSONArray(userDataString);
+
+                // userData:
+                // index 0 = ID
+                // index 1 = USERNAME
+                loggedUsername = userData.getString(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // --- CONNECT SOCKET ---
         client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
             @Override public void onConnected() {
-                client.solicitarMensajesChat();
+                client.solicitarMensajesChat(); // load history
             }
 
             @Override public void onNewMessage(JSONObject msg) {
@@ -60,14 +76,16 @@ public class ChatActivity extends AppCompatActivity {
 
         client.connect();
 
+        // --- SEND MESSAGE ---
         btnSend.setOnClickListener(v -> {
             String text = inputChat.getText().toString().trim();
             if (text.isEmpty()) return;
 
-            client.enviarMensajeChat(username, text);
+            client.enviarMensajeChat(loggedUsername, text);
             inputChat.setText("");
         });
 
+        // --- BACK BUTTON ---
         btnBack.setOnClickListener(v -> finish());
     }
 

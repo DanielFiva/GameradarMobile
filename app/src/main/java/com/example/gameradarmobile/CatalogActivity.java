@@ -62,6 +62,7 @@ public class CatalogActivity extends AppCompatActivity {
         btnVerUsuarios.setOnClickListener(v -> Toast.makeText(this, "Ver usuarios (pendiente)", Toast.LENGTH_SHORT).show());
         btnBottomAction.setOnClickListener(v -> {
             Intent chatIntent = new Intent(CatalogActivity.this, ChatActivity.class);
+            chatIntent.putExtra("user_data", userData.toString());
             startActivity(chatIntent);
         });
 
