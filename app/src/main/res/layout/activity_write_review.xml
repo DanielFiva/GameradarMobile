@@ -44,9 +44,11 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:background="@drawable/type_button_bg"
+            android:background="@drawable/type_button_selector"
             android:textColor="#C7D5E0"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:focusable="true"
+            android:clickable="true"/>
 
         <Button
             android:id="@+id/btnNegative"
@@ -54,10 +56,12 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:background="@drawable/type_button_bg"
+            android:background="@drawable/type_button_selector"
             android:textColor="#C7D5E0"
             android:padding="12dp"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            android:focusable="true"
+            android:clickable="true"/>
     </LinearLayout>
 
     <!-- Comment box -->

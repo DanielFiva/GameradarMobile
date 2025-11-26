@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.graphics.drawable.GradientDrawable;
 
 public class WriteReviewActivity extends AppCompatActivity {
 
@@ -33,20 +34,20 @@ public class WriteReviewActivity extends AppCompatActivity {
         gameId = getIntent().getIntExtra("game_id", -1);
 
         // Default selection
-        btnPositive.setSelected(true);
-        btnNegative.setSelected(false);
+        styleSelected(btnPositive);
+        styleUnselected(btnNegative);
 
         // Type buttons logic
         btnPositive.setOnClickListener(v -> {
             reviewType = "positiva";
-            btnPositive.setSelected(true);
-            btnNegative.setSelected(false);
+            styleSelected(btnPositive);
+            styleUnselected(btnNegative);
         });
 
         btnNegative.setOnClickListener(v -> {
             reviewType = "negativa";
-            btnPositive.setSelected(false);
-            btnNegative.setSelected(true);
+            styleSelected(btnNegative);
+            styleUnselected(btnPositive);
         });
 
         // Back button
@@ -55,6 +56,42 @@ public class WriteReviewActivity extends AppCompatActivity {
         // Publish button
         btnPublish.setOnClickListener(v -> publishReview());
     }
+
+    // ----------------------------
+    //   BUTTON VISUAL STYLING
+    // ----------------------------
+
+    private void styleSelected(Button btn) {
+        // Animation
+        btn.animate().scaleX(1.03f).scaleY(1.03f).setDuration(120).start();
+
+        GradientDrawable shape = new GradientDrawable();
+        shape.setColor(0xFF171A1E);          // dark interior
+        shape.setCornerRadius(24f);          // rounded corners
+        shape.setStroke(4, 0xFF3B82F6);      // blue border
+
+        btn.setBackground(shape);
+        btn.setTextColor(0xFF3B82F6);        // blue text
+        btn.setElevation(8f);
+    }
+
+    private void styleUnselected(Button btn) {
+        // Animation
+        btn.animate().scaleX(1f).scaleY(1f).setDuration(120).start();
+
+        GradientDrawable shape = new GradientDrawable();
+        shape.setColor(0xFF16191D);        // darker background
+        shape.setCornerRadius(24f);        // rounded corners
+        shape.setStroke(2, 0xFF3B3F45);    // subtle gray border
+
+        btn.setBackground(shape);
+        btn.setTextColor(0xFFC7D5E0);      // normal text
+        btn.setElevation(0f);
+    }
+
+    // ----------------------------
+    //   SEND REVIEW (TEMP LOGIC)
+    // ----------------------------
 
     private void publishReview() {
         String scoreStr = editScore.getText().toString().trim();

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- activated (selected) -->
+    <item android:state_activated="true" android:drawable="@drawable/type_button_selected"/>
+    <!-- default -->
+    <item android:drawable="@drawable/type_button_default"/>
+</selector>
