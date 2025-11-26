@@ -40,7 +40,7 @@ public class SocketClient {
     public void connect() {
         new Thread(() -> {
             try {
-                socket = new Socket("8.tcp.ngrok.io", 10911);
+                socket = new Socket("4.tcp.ngrok.io", 17717);
                 outputStream = socket.getOutputStream();
                 input = new BufferedReader(
                         new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)
@@ -123,7 +123,14 @@ public class SocketClient {
         } catch (Exception ignored) {}
     }
 
-    public void solicitarReviews(int gameId) { try { JSONObject obj = new JSONObject(); obj.put("game_id", gameId); send("GET_REVIEWS " + obj.toString()); } catch (Exception ignored) {} }
+    public void solicitarReviews(int gameId) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("game_id", gameId);
+            send("GET_REVIEWS " + obj.toString());
+        } catch (Exception ignored) {}
+    }
+
     public void enviarReview(JSONObject review) { send("ADD_REVIEW " + review.toString()); }
     public void crearUsuario(JSONObject userData) { send("CREATE_USER " + userData.toString()); }
     public void enviarMensajeChat(String username, String content) { try { JSONObject obj = new JSONObject(); obj.put("username", username); obj.put("content", content); send("SEND_MESSAGE " + obj.toString()); } catch (Exception ignored) {} }

@@ -31,7 +31,7 @@ public class GameDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String title = intent.getStringExtra("title");
-        String summary = intent.getStringExtra("summary");
+        String summary = intent.getStringExtra("SHORT_DESC");
         String developer = intent.getStringExtra("developer");
         String publisher = intent.getStringExtra("publisher");
         String releaseDate = intent.getStringExtra("releaseDate");
@@ -55,7 +55,11 @@ public class GameDetailsActivity extends AppCompatActivity {
         findViewById(R.id.backButton).setOnClickListener(v -> finish());
 
         findViewById(R.id.reviewButton).setOnClickListener(v -> {
-            // TODO: open reviews page
+            Intent reviews = new Intent(GameDetailsActivity.this, GameReviewsActivity.class);
+            reviews.putExtra("game_id", getIntent().getIntExtra("id", -1));
+            reviews.putExtra("game_name", titleLabel.getText().toString());
+            startActivity(reviews);
         });
+
     }
 }
