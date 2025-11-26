@@ -30,7 +30,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.VH> {
     public void onBindViewHolder(@NonNull VH h, int pos) {
         Review r = reviews.get(pos);
 
-        h.txtUser.setText("Usuario: " + r.userId);
+        h.txtUser.setText("Usuario: " + r.username);
         h.txtScore.setText("Puntuación: " + r.rating);
         h.txtDate.setText(r.date);
         h.txtType.setText(r.type);

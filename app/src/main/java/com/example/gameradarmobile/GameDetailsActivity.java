@@ -58,6 +58,13 @@ public class GameDetailsActivity extends AppCompatActivity {
             Intent reviews = new Intent(GameDetailsActivity.this, GameReviewsActivity.class);
             reviews.putExtra("game_id", getIntent().getIntExtra("id", -1));
             reviews.putExtra("game_name", titleLabel.getText().toString());
+
+            // Pass the userData string along
+            String userDataString = getIntent().getStringExtra("userData");
+            if (userDataString != null) {
+                reviews.putExtra("user_data", userDataString);
+            }
+
             startActivity(reviews);
         });
 

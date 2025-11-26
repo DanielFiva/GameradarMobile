@@ -52,7 +52,7 @@ public class SocketClient {
                 String line;
                 while ((line = input.readLine()) != null) {
                     line = line.trim();
-                    if (line.isEmpty()) continue; // skip empty lines
+                    if (line.isEmpty()) continue;
                     try {
                         JSONObject obj = new JSONObject(line);
                         if (obj.has("type")) {
@@ -86,13 +86,6 @@ public class SocketClient {
         try { connected = false; if (socket != null) socket.close(); }
         catch (IOException e) { Log.e("CLIENT", "Disconnect error: " + e.getMessage()); }
     }
-    public void solicitarJuego(String gameName) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("game_name", gameName);
-            send("GET_GAME " + obj.toString());
-        } catch (Exception ignored) {}
-    }
 
     public void send(String message) {
         new Thread(() -> {
@@ -106,6 +99,7 @@ public class SocketClient {
         }).start();
     }
 
+    // Existing methods
     public void login(String user, String pass) {
         try { JSONObject obj = new JSONObject(); obj.put("username", user); obj.put("password", pass); send("LOGIN " + obj.toString()); }
         catch (Exception ignored) {}
@@ -135,4 +129,13 @@ public class SocketClient {
     public void crearUsuario(JSONObject userData) { send("CREATE_USER " + userData.toString()); }
     public void enviarMensajeChat(String username, String content) { try { JSONObject obj = new JSONObject(); obj.put("username", username); obj.put("content", content); send("SEND_MESSAGE " + obj.toString()); } catch (Exception ignored) {} }
     public void solicitarMensajesChat() { send("GET_MESSAGES"); }
+
+    // New method: get user by ID
+    public void solicitarUsuario(int userId) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("user_id", userId);
+            send("GET_USER " + obj.toString());
+        } catch (Exception ignored) {}
+    }
 }

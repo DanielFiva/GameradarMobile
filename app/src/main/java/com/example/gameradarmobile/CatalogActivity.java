@@ -152,7 +152,7 @@ public class CatalogActivity extends AppCompatActivity {
                                 String releaseDate = gameArray.optString(5);
                                 String developer = gameArray.optString(6);
                                 String publisher = gameArray.optString(7);
-
+;
                                 Intent intent = new Intent(CatalogActivity.this, GameDetailsActivity.class);
                                 intent.putExtra("id", gameId);
                                 intent.putExtra("title", name);
@@ -162,6 +162,7 @@ public class CatalogActivity extends AppCompatActivity {
                                 intent.putExtra("releaseDate", releaseDate);
                                 intent.putExtra("developer", developer);
                                 intent.putExtra("publisher", publisher);
+                                intent.putExtra("userData",userData.toString());
                                 startActivity(intent);
                             }
                         }

@@ -22,6 +22,7 @@ public class GameReviewsActivity extends AppCompatActivity {
 
     SocketClient client;
     int gameId;
+    int userId;
 
     TextView title;
     Button btnBack, btnWrite;
@@ -44,61 +45,79 @@ public class GameReviewsActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
         btnWrite.setOnClickListener(v -> {
             Intent intent = new Intent(GameReviewsActivity.this, WriteReviewActivity.class);
-            intent.putExtra("game_id", gameId); // pass the current game id
-            startActivityForResult(intent, 100); // 100 = request code
+            intent.putExtra("game_id", gameId);
+            intent.putExtra("user_id", userId);
+            startActivityForResult(intent, 100);
         });
-        // Receive game_id
+
         gameId = getIntent().getIntExtra("game_id", -1);
 
         client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
-            @Override public void onConnected() {
+            @Override
+            public void onConnected() {
                 client.solicitarReviews(gameId);
             }
 
             @Override public void onNewMessage(JSONObject msg) {}
-
             @Override public void onMessageHistory(JSONObject history) {}
 
-            @Override public void onGenericResponse(JSONObject resp) {
+            @Override
+            public void onGenericResponse(JSONObject resp) {
                 runOnUiThread(() -> handleServerResponse(resp));
             }
         });
 
         client.connect();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == RESULT_OK) {
-            // Reload reviews after a new one was published
-            if (client != null) {
-                client.solicitarReviews(gameId);
-            }
+            if (client != null) client.solicitarReviews(gameId);
         }
     }
+
     private void handleServerResponse(JSONObject resp) {
         try {
             if (resp.has("reviews")) {
-
                 JSONArray arr = resp.getJSONArray("reviews");
                 reviewList.clear();
 
                 for (int i = 0; i < arr.length(); i++) {
                     JSONArray r = arr.getJSONArray(i);
+                    int reviewId = r.getInt(0);
+                    int userId = r.getInt(1);
+                    int gameId = r.getInt(2);
+                    int rating = r.getInt(3);
+                    String comment = r.getString(4);
+                    String date = r.getString(5);
+                    String type = r.getString(6);
 
-                    Review review = new Review(
-                            r.getInt(0),      // review_id
-                            r.getInt(1),      // user_id
-                            r.getInt(2),      // game_id
-                            r.getInt(3),      // rating
-                            r.getString(4),   // comment
-                            r.getString(5),   // creation_date
-                            r.getString(6)    // type
-                    );
-
+                    // Create Review with temporary username as userId string
+                    Review review = new Review(reviewId, String.valueOf(userId), gameId, rating, comment, date, type);
                     reviewList.add(review);
+
+                    // Fetch username asynchronously
+                    int finalIndex = reviewList.size() - 1;
+                    client.solicitarUsuario(userId);
                 }
 
+                adapter.notifyDataSetChanged();
+            }
+
+            // Handle username responses
+            if ("USER_DATA".equals(resp.optString("type")) && "OK".equals(resp.optString("status"))) {
+                JSONArray userData = resp.getJSONArray("user_data");
+                int userIdResp = userData.optInt(0);
+                String username = userData.optString(1, "Unknown");
+
+                // Update the review in the list
+                for (Review review : reviewList) {
+                    if (review.username.equals(String.valueOf(userIdResp))) {
+                        review.username = username;
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
 
