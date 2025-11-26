@@ -143,7 +143,10 @@ public class WriteReviewActivity extends AppCompatActivity {
                                 Toast.makeText(WriteReviewActivity.this,
                                         "Reseña publicada correctamente", Toast.LENGTH_SHORT).show();
                                 client.disconnect();
-                                finish();
+
+                                // Set result to notify GameReviewsActivity to reload reviews
+                                setResult(RESULT_OK);
+                                finish(); // close this activity
                             } else {
                                 String error = resp.optString("error", "Error desconocido");
                                 Toast.makeText(WriteReviewActivity.this,

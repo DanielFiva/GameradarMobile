@@ -45,7 +45,7 @@ public class GameReviewsActivity extends AppCompatActivity {
         btnWrite.setOnClickListener(v -> {
             Intent intent = new Intent(GameReviewsActivity.this, WriteReviewActivity.class);
             intent.putExtra("game_id", gameId); // pass the current game id
-            startActivity(intent);
+            startActivityForResult(intent, 100); // 100 = request code
         });
         // Receive game_id
         gameId = getIntent().getIntExtra("game_id", -1);
@@ -66,7 +66,16 @@ public class GameReviewsActivity extends AppCompatActivity {
 
         client.connect();
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            // Reload reviews after a new one was published
+            if (client != null) {
+                client.solicitarReviews(gameId);
+            }
+        }
+    }
     private void handleServerResponse(JSONObject resp) {
         try {
             if (resp.has("reviews")) {
