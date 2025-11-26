@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -41,7 +42,11 @@ public class GameReviewsActivity extends AppCompatActivity {
         btnWrite = findViewById(R.id.btnWriteReview);
 
         btnBack.setOnClickListener(v -> finish());
-
+        btnWrite.setOnClickListener(v -> {
+            Intent intent = new Intent(GameReviewsActivity.this, WriteReviewActivity.class);
+            intent.putExtra("game_id", gameId); // pass the current game id
+            startActivity(intent);
+        });
         // Receive game_id
         gameId = getIntent().getIntExtra("game_id", -1);
 

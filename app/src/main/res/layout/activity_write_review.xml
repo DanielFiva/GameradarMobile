@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#1B1E23"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/titleWriteReview"
+        android:text="Escribir Reseña"
+        android:textSize="22sp"
+        android:textColor="#C7D5E0"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"/>
+
+    <!-- Score input -->
+    <EditText
+        android:id="@+id/editScore"
+        android:hint="Puntaje (0-100)"
+        android:inputType="number"
+        android:maxLength="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#C7D5E0"
+        android:padding="12dp"
+        android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/layoutType"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnPositive"
+            android:text="Positiva"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@drawable/type_button_bg"
+            android:textColor="#C7D5E0"
+            android:padding="12dp"/>
+
+        <Button
+            android:id="@+id/btnNegative"
+            android:text="Negativa"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@drawable/type_button_bg"
+            android:textColor="#C7D5E0"
+            android:padding="12dp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- Comment box -->
+    <EditText
+        android:id="@+id/editComment"
+        android:hint="Escribe tu reseña aquí"
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/edit_text_bg"
+        android:textColor="#C7D5E0"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"/>
+
+    <!-- Buttons -->
+    <Button
+        android:id="@+id/btnPublishReview"
+        android:text="Publicar reseña"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnBackWriteReview"
+        android:text="Volver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"/>
+
+</LinearLayout>

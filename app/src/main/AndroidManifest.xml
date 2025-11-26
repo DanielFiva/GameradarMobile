@@ -29,6 +29,8 @@
             android:label="Chat" />
         <activity android:name=".GameReviewsActivity"
             android:label="Reviews" />
+        <activity android:name=".WriteReviewActivity"
+            android:label="Write review" />
     </application>
 
 </manifest>
