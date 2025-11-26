@@ -30,7 +30,7 @@ public class GameReviewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_reviews);
 
-        recyclerReviews = findViewById(R.id.recyclerReviews);
+        recyclerReviews = findViewById(R.id.reviewsRecycler);
         recyclerReviews.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new ReviewAdapter(reviewList);
