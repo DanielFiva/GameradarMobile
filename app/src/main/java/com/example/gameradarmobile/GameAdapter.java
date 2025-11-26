@@ -1,6 +1,5 @@
 package com.example.gameradarmobile;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,9 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
         this.client = client;
     }
 
+    /**
+     * Add a batch of games received from server
+     */
     public void addGames(JSONArray newGames) {
         for (int i = 0; i < newGames.length(); i++) {
             JSONArray arr = newGames.optJSONArray(i);
@@ -46,6 +48,14 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
                 Log.e("GameAdapter", "Error converting array to object", e);
             }
         }
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Clear all games, used for real-time search
+     */
+    public void clearGames() {
+        games.clear();
         notifyDataSetChanged();
     }
 

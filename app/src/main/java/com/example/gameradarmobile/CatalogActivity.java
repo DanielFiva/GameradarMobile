@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -21,12 +23,16 @@ public class CatalogActivity extends AppCompatActivity {
     EditText searchInput;
     RecyclerView recyclerGames;
     Button btnVerUsuarios, btnBottomAction, btnBack;
+    TextView txtNoResults;
     GameAdapter adapter;
     JSONArray userData = null;
 
     SocketClient client;
     int currentPage = 0;
     boolean loading = false;
+
+    private Handler searchHandler = new Handler();
+    private Runnable searchRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class CatalogActivity extends AppCompatActivity {
 
         searchInput = findViewById(R.id.searchInput);
         recyclerGames = findViewById(R.id.recyclerGames);
+        txtNoResults = findViewById(R.id.txtNoResults);
         btnVerUsuarios = findViewById(R.id.btnVerUsuarios);
         btnVerUsuarios.setVisibility(View.GONE);
         btnBottomAction = findViewById(R.id.btnBottomAction);
@@ -55,7 +62,7 @@ public class CatalogActivity extends AppCompatActivity {
 
         client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
             @Override
-            public void onConnected() { client.solicitarJuegos("", 0); }
+            public void onConnected() { requestGames(""); }
 
             @Override public void onNewMessage(JSONObject msg) {}
             @Override public void onMessageHistory(JSONObject history) {}
@@ -77,6 +84,7 @@ public class CatalogActivity extends AppCompatActivity {
             startActivity(chatIntent);
         });
 
+        // Scroll listener for pagination
         recyclerGames.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -85,11 +93,32 @@ public class CatalogActivity extends AppCompatActivity {
                     if (!loading && lm != null && lm.findLastVisibleItemPosition() >= adapter.getItemCount() - 5) {
                         loading = true;
                         currentPage++;
-                        client.solicitarJuegos(searchInput.getText().toString(), currentPage);
+                        requestGames(searchInput.getText().toString());
                     }
                 }
             }
         });
+
+        // Real-time search
+        searchInput.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            public void onTextChanged(String s) {
+                if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
+
+                searchRunnable = () -> {
+                    adapter.clearGames(); // clear previous results
+                    currentPage = 0;
+                    requestGames(s);
+                };
+
+                // delay search by 400ms to reduce server load
+                searchHandler.postDelayed(searchRunnable, 400);
+            }
+        });
+    }
+
+    private void requestGames(String query) {
+        if (client != null) client.solicitarJuegos(query, currentPage);
     }
 
     private void handleServerResponse(JSONObject resp) {
@@ -101,13 +130,19 @@ public class CatalogActivity extends AppCompatActivity {
                             JSONArray games = resp.getJSONArray("games");
                             adapter.addGames(games);
                             loading = false;
+
+                            // Show no results if empty
+                            if (adapter.getItemCount() == 0) {
+                                txtNoResults.setVisibility(View.VISIBLE);
+                            } else {
+                                txtNoResults.setVisibility(View.GONE);
+                            }
                         }
                         break;
                     case "GAME_DATA":
                         if (resp.getString("status").equals("OK")) {
                             JSONArray gameArray = resp.getJSONArray("game_data");
 
-                            // Make sure the array has enough elements
                             if (gameArray.length() >= 8) {
                                 int gameId = gameArray.optInt(0);
                                 String name = gameArray.optString(1);
@@ -118,7 +153,6 @@ public class CatalogActivity extends AppCompatActivity {
                                 String developer = gameArray.optString(6);
                                 String publisher = gameArray.optString(7);
 
-                                // Launch details activity
                                 Intent intent = new Intent(CatalogActivity.this, GameDetailsActivity.class);
                                 intent.putExtra("id", gameId);
                                 intent.putExtra("title", name);

@@ -23,6 +23,17 @@
             android:singleLine="true" />
     </androidx.appcompat.widget.Toolbar>
 
+    <TextView
+        android:id="@+id/txtNoResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No se encontraron resultados"
+        android:textColor="#FFF"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerGames"
         android:layout_width="match_parent"
