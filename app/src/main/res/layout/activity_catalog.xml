@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0F1113">
+    android:background="#1b2838">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
