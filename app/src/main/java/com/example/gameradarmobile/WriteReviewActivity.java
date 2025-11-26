@@ -7,6 +7,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.graphics.drawable.GradientDrawable;
 
+import org.json.JSONObject;
+
 public class WriteReviewActivity extends AppCompatActivity {
 
     EditText editScore, editComment;
@@ -14,8 +16,10 @@ public class WriteReviewActivity extends AppCompatActivity {
     Button btnPublish, btnBack;
 
     String reviewType = "positiva"; // default
+    int gameId; // receive from intent
+    int userId; // receive from intent
 
-    int gameId; // receive from intent if needed
+    SocketClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +34,9 @@ public class WriteReviewActivity extends AppCompatActivity {
         btnPublish = findViewById(R.id.btnPublishReview);
         btnBack = findViewById(R.id.btnBackWriteReview);
 
-        // Receive gameId from intent
+        // Receive gameId and userId from intent
         gameId = getIntent().getIntExtra("game_id", -1);
+        userId = getIntent().getIntExtra("user_id", -1);
 
         // Default selection
         styleSelected(btnPositive);
@@ -58,41 +63,33 @@ public class WriteReviewActivity extends AppCompatActivity {
     }
 
     // ----------------------------
-    //   BUTTON VISUAL STYLING
+    // BUTTON VISUAL STYLING
     // ----------------------------
-
     private void styleSelected(Button btn) {
-        // Animation
         btn.animate().scaleX(1.03f).scaleY(1.03f).setDuration(120).start();
-
         GradientDrawable shape = new GradientDrawable();
-        shape.setColor(0xFF171A1E);          // dark interior
-        shape.setCornerRadius(24f);          // rounded corners
-        shape.setStroke(4, 0xFF3B82F6);      // blue border
-
+        shape.setColor(0xFF171A1E);
+        shape.setCornerRadius(24f);
+        shape.setStroke(4, 0xFF3B82F6);
         btn.setBackground(shape);
-        btn.setTextColor(0xFF3B82F6);        // blue text
+        btn.setTextColor(0xFF3B82F6);
         btn.setElevation(8f);
     }
 
     private void styleUnselected(Button btn) {
-        // Animation
         btn.animate().scaleX(1f).scaleY(1f).setDuration(120).start();
-
         GradientDrawable shape = new GradientDrawable();
-        shape.setColor(0xFF16191D);        // darker background
-        shape.setCornerRadius(24f);        // rounded corners
-        shape.setStroke(2, 0xFF3B3F45);    // subtle gray border
-
+        shape.setColor(0xFF16191D);
+        shape.setCornerRadius(24f);
+        shape.setStroke(2, 0xFF3B3F45);
         btn.setBackground(shape);
-        btn.setTextColor(0xFFC7D5E0);      // normal text
+        btn.setTextColor(0xFFC7D5E0);
         btn.setElevation(0f);
     }
 
     // ----------------------------
-    //   SEND REVIEW (TEMP LOGIC)
+    // SEND REVIEW TO SERVER
     // ----------------------------
-
     private void publishReview() {
         String scoreStr = editScore.getText().toString().trim();
         String comment = editComment.getText().toString().trim();
@@ -115,8 +112,61 @@ public class WriteReviewActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: Implement actual sending to server
-        Toast.makeText(this, "Reseña lista para publicar:\nTipo: " + reviewType +
-                "\nPuntaje: " + score + "\nComentario: " + comment, Toast.LENGTH_LONG).show();
+        try {
+            // Create a new client instance
+            client = new SocketClient("8.tcp.ngrok.io", 16743, new SocketClient.MessageListener() {
+                @Override
+                public void onConnected() {
+                    try {
+                        JSONObject reviewJson = new JSONObject();
+                        reviewJson.put("game_id", gameId);
+                        reviewJson.put("user_id", userId);
+                        reviewJson.put("review_text", comment);
+                        reviewJson.put("rating", score);
+                        reviewJson.put("type", reviewType);
+
+                        // Send review
+                        client.enviarReview(reviewJson);
+
+                    } catch (Exception e) {
+                        runOnUiThread(() -> Toast.makeText(WriteReviewActivity.this,
+                                "Error creando JSON: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show());
+                    }
+                }
+
+                @Override
+                public void onGenericResponse(JSONObject resp) {
+                    runOnUiThread(() -> {
+                        try {
+                            if ("OK".equals(resp.optString("status"))) {
+                                Toast.makeText(WriteReviewActivity.this,
+                                        "Reseña publicada correctamente", Toast.LENGTH_SHORT).show();
+                                client.disconnect();
+                                finish();
+                            } else {
+                                String error = resp.optString("error", "Error desconocido");
+                                Toast.makeText(WriteReviewActivity.this,
+                                        "No se pudo publicar la reseña: " + error, Toast.LENGTH_SHORT).show();
+                                client.disconnect();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(WriteReviewActivity.this,
+                                    "Error procesando respuesta: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                            client.disconnect();
+                        }
+                    });
+                }
+
+                @Override public void onNewMessage(JSONObject msg) {}
+                @Override public void onMessageHistory(JSONObject history) {}
+            });
+
+            client.connect();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Error conectando al servidor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
