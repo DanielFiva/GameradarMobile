@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#171A21">
+    android:background="#1b2838">
 
     <LinearLayout
         android:orientation="vertical"
@@ -17,15 +17,16 @@
             android:textColor="#FFFFFF"
             android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            />
         <ImageView
             android:id="@+id/gameImage"
             android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:background="#000" />
+            android:layout_width="wrap_content"
+            android:layout_height="154dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:background="#333" />
 
         <TextView
             android:id="@+id/summaryBox"
@@ -37,75 +38,89 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <LinearLayout
-            android:orientation="vertical"
+        <!-- INFO BLOCK WITH RATING BOX -->
+        <RelativeLayout
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- RATING BOX (TOP RIGHT) -->
             <TextView
-                android:id="@+id/devLabel"
-                android:text="Desarrolladora:"
+                android:id="@+id/ratingBox"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="#1B2838"
+                android:gravity="center"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true" />
 
-            <TextView
-                android:id="@+id/devValue"
-                android:textColor="#AAAAAA"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp"
-                android:layout_width="wrap_content"
+            <!-- INFO COLUMN -->
+            <LinearLayout
+                android:id="@+id/infoColumn"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:layout_toStartOf="@id/ratingBox"
+                android:layout_alignParentStart="true">
 
-            <TextView
-                android:id="@+id/pubLabel"
-                android:text="Distribuidora:"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:layout_marginTop="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/devLabel"
+                    android:text="Desarrolladora:"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/pubValue"
-                android:textColor="#AAAAAA"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/devValue"
+                    android:textColor="#AAAAAA"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/releaseLabel"
-                android:text="Fecha de lanzamiento:"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:layout_marginTop="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/pubLabel"
+                    android:text="Distribuidora:"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/releaseValue"
-                android:textColor="#AAAAAA"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/pubValue"
+                    android:textColor="#AAAAAA"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/ratingBox"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:background="#1B2838"
-            android:layout_width="80dp"
-            android:layout_height="80dp" />
+                <TextView
+                    android:id="@+id/releaseLabel"
+                    android:text="Fecha de lanzamiento:"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
+                <TextView
+                    android:id="@+id/releaseValue"
+                    android:textColor="#AAAAAA"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!-- BUTTONS -->
         <LinearLayout
             android:orientation="horizontal"
             android:gravity="center"
@@ -117,18 +132,18 @@
                 android:id="@+id/backButton"
                 android:text="Volver"
                 android:layout_marginEnd="16dp"
-                android:background="#2A475E"
+                android:background="@drawable/btn_blue"
                 android:textColor="#FFFFFF"
                 android:layout_width="120dp"
-                android:layout_height="50dp" />
+                android:layout_height="60dp" />
 
             <Button
                 android:id="@+id/reviewButton"
                 android:text="Ver reseñas"
-                android:background="#5C7E10"
+                android:background="@drawable/btn_blue"
                 android:textColor="#FFFFFF"
                 android:layout_width="120dp"
-                android:layout_height="50dp" />
+                android:layout_height="60dp" />
 
         </LinearLayout>
 

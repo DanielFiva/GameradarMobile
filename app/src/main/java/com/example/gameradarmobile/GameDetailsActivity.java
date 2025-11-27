@@ -45,6 +45,13 @@ public class GameDetailsActivity extends AppCompatActivity {
         pubValue.setText(publisher);
         releaseValue.setText(releaseDate);
         ratingBox.setText(String.valueOf(rating));
+        if (rating <= 30) {
+            ratingBox.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+        } else if (rating <= 70) {
+            ratingBox.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_light));
+        } else {
+            ratingBox.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
+        }
 
         Glide.with(this)
                 .load(imageUrl)
