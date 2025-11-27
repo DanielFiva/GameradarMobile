@@ -2,138 +2,150 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="#FFFFFF">
+    android:background="#2a475e">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center"
+        android:padding="24dp">
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/titleLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Crear usuario"
-            android:textSize="24sp"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="16dp"
-            android:background="#7F43FF"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Username -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Usuario"
-            android:textSize="14sp"
-            android:textColor="#000000"
-            android:paddingBottom="4dp"/>
-        <EditText
-            android:id="@+id/UsernameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg"
-            android:paddingLeft="10dp"
-            android:hint="Nombre de usuario"
-            android:textColor="#000000"
-            android:textSize="14sp"/>
-
-        <!-- Password -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Contraseña"
-            android:textSize="14sp"
-            android:textColor="#000000"
-            android:paddingTop="8dp"
-            android:paddingBottom="4dp"/>
-        <EditText
-            android:id="@+id/PasswordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg"
-            android:paddingLeft="10dp"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:textColor="#000000"
-            android:textSize="14sp"/>
-
-        <!-- Age -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Edad"
-            android:textSize="14sp"
-            android:textColor="#000000"
-            android:paddingTop="8dp"
-            android:paddingBottom="4dp"/>
-        <EditText
-            android:id="@+id/AgeEditText"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg"
-            android:paddingLeft="10dp"
-            android:hint="Edad"
-            android:inputType="number"
-            android:textColor="#000000"
-            android:textSize="14sp"/>
-
-        <!-- Phone -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Teléfono"
-            android:textSize="14sp"
-            android:textColor="#000000"
-            android:paddingTop="8dp"
-            android:paddingBottom="4dp"/>
-        <EditText
-            android:id="@+id/PhoneEditText"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/edittext_bg"
-            android:paddingLeft="10dp"
-            android:hint="Teléfono"
-            android:inputType="phone"
-            android:textColor="#000000"
-            android:textSize="14sp"/>
-
-        <!-- Buttons -->
+        <!-- User Card -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="16dp">
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@drawable/bg_login_card"
+            android:elevation="6dp"
+            android:layout_marginTop="40dp">
 
-            <Button
-                android:id="@+id/btnAccept"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="Aceptar"
-                android:background="@drawable/button_accept"
+            <!-- Title -->
+            <TextView
+                android:id="@+id/titleLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Crear usuario"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:fontFamily="serif"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:background="@drawable/bg_title"
+                android:textColor="#000000"/>
+
+            <!-- Username -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Usuario"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="4dp"/>
+            <EditText
+                android:id="@+id/UsernameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input"
+                android:paddingLeft="10dp"
+                android:hint="Nombre de usuario"
                 android:textColor="#000000"
                 android:textSize="16sp"/>
 
-            <Space
-                android:layout_width="16dp"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/btnBack"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="Volver"
-                android:background="@drawable/button_back"
+            <!-- Password -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contraseña"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:paddingTop="14dp"
+                android:paddingBottom="4dp"/>
+            <EditText
+                android:id="@+id/PasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input"
+                android:inputType="textPassword"
                 android:textColor="#000000"
                 android:textSize="16sp"/>
+
+            <!-- Age -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Edad"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:paddingTop="14dp"
+                android:paddingBottom="4dp"/>
+            <EditText
+                android:id="@+id/AgeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input"
+                android:inputType="number"
+                android:paddingLeft="10dp"
+                android:hint="Edad"
+                android:textColor="#000000"
+                android:textSize="16sp"/>
+
+            <!-- Phone -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Teléfono"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:paddingTop="14dp"
+                android:paddingBottom="4dp"/>
+            <EditText
+                android:id="@+id/PhoneEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_input"
+                android:inputType="phone"
+                android:paddingLeft="10dp"
+                android:hint="Teléfono"
+                android:textColor="#000000"
+                android:textSize="16sp"/>
+
+            <!-- Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="20dp">
+
+                <Button
+                    android:id="@+id/btnAccept"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Aceptar"
+                    android:background="@drawable/bg_button_green"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"/>
+
+                <Button
+                    android:id="@+id/btnBack"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Volver"
+                    android:background="@drawable/bg_button_red"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>

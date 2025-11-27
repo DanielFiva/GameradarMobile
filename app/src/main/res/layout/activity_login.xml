@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login_bg"
+    android:background="#2a475e"
     >
 
     <LinearLayout
@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:gravity="center"
         android:padding="24dp">
-        android:background=
+
 
         <!-- Login Card -->
         <LinearLayout
