@@ -1,76 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#2A475E"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="4dp"
+    card_view:cardBackgroundColor="#2A475E"
     android:clipToPadding="false"
     android:clipChildren="false">
 
-    <!-- User and Score Row -->
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/txtReviewUser"
-            android:textColor="#C7D5E0"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
+        <!-- User and Score Row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/txtReviewUser"
+                android:textColor="#C7D5E0"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/txtReviewScore"
+                android:textColor="#FFD700"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <!-- Date and Type Row -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+
+            <TextView
+                android:id="@+id/txtReviewDate"
+                android:textColor="#C7D5E0"
+                android:textSize="12sp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+
+            <!-- ImageView for thumbs up/down -->
+            <ImageView
+                android:id="@+id/imgReviewType"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Review type icon"/>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#3B5C74"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Comment -->
         <TextView
-            android:id="@+id/txtReviewScore"
-            android:textColor="#FFD700"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
+            android:id="@+id/txtReviewComment"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:lineSpacingExtra="2dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <!-- Date and Type Row -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp">
-
-        <TextView
-            android:id="@+id/txtReviewDate"
-            android:textColor="#C7D5E0"
-            android:textSize="12sp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/txtReviewType"
-            android:textColor="#C7D5E0"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <!-- Divider -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#3B5C74"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
-
-    <!-- Comment -->
-    <TextView
-        android:id="@+id/txtReviewComment"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
-        android:lineSpacingExtra="2dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-</LinearLayout>
+</androidx.cardview.widget.CardView>
