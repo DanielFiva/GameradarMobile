@@ -15,13 +15,15 @@
 
         <!-- Login Card -->
         <LinearLayout
-            android:layout_width="320dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:background="@drawable/bg_login_card"
-            android:elevation="6dp"
-            android:layout_marginTop="40dp">
+            android:elevation="6dp">
 
             <!-- Title -->
             <TextView
