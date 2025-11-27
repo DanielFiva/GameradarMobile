@@ -21,6 +21,7 @@
     <EditText
         android:id="@+id/editScore"
         android:hint="Puntaje (0-100)"
+        android:textColorHint="#181717"
         android:inputType="number"
         android:maxLength="3"
         android:layout_width="match_parent"
@@ -67,7 +68,8 @@
     <!-- Comment box -->
     <EditText
         android:id="@+id/editComment"
-        android:hint="Escribe tu reseña aquí"
+        android:hint="Escribe tu reseña aquí..."
+        android:textColorHint="#181717"
         android:inputType="textMultiLine"
         android:gravity="top"
         android:layout_width="match_parent"
