@@ -40,7 +40,7 @@ public class SocketClient {
     public void connect() {
         new Thread(() -> {
             try {
-                socket = new Socket("2.tcp.ngrok.io", 11880);
+                socket = new Socket("2.tcp.ngrok.io", 10749);
                 outputStream = socket.getOutputStream();
                 input = new BufferedReader(
                         new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)

@@ -36,7 +36,7 @@ public class WriteReviewActivity extends AppCompatActivity {
 
         // Receive gameId and userId from intent
         gameId = getIntent().getIntExtra("game_id", -1);
-        userId = getIntent().getIntExtra("user_id", -1);
+        userId = getIntent().getIntExtra("userId", -1);
 
         // Default selection
         styleSelected(btnPositive);

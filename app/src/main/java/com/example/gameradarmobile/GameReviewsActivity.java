@@ -42,15 +42,18 @@ public class GameReviewsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBackReviews);
         btnWrite = findViewById(R.id.btnWriteReview);
 
+        gameId = getIntent().getIntExtra("game_id", -1);
+        userId = getIntent().getIntExtra("userId", -1);
+
         btnBack.setOnClickListener(v -> finish());
         btnWrite.setOnClickListener(v -> {
             Intent intent = new Intent(GameReviewsActivity.this, WriteReviewActivity.class);
             intent.putExtra("game_id", gameId);
-            intent.putExtra("user_id", userId);
+            intent.putExtra("userId", userId);
             startActivityForResult(intent, 100);
         });
 
-        gameId = getIntent().getIntExtra("game_id", -1);
+
 
         client = new SocketClient("2.tcp.ngrok.io", 12632, new SocketClient.MessageListener() {
             @Override

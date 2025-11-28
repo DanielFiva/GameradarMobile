@@ -69,7 +69,17 @@ public class GameDetailsActivity extends AppCompatActivity {
             // Pass the userData string along
             String userDataString = getIntent().getStringExtra("userData");
             if (userDataString != null) {
-                reviews.putExtra("user_data", userDataString);
+
+                String cleaned = userDataString.replace("[", "").replace("]", "");
+
+
+                String[] parts = cleaned.split(",");
+
+
+                String firstValue = parts[0].trim();
+
+
+                reviews.putExtra("userId", Integer.parseInt(firstValue));
             }
 
             startActivity(reviews);
